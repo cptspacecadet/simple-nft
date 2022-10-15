@@ -1,0 +1,6 @@
+2022-10-15T02:31:11.300Z|info|deploying NFToken to goerli
+2022-10-15T02:31:11.476Z|info|connected as 0x8a97426C1a720a45B8d69E974631f01f1168232B
+2022-10-15T02:31:24.963Z|info|deployed to 0x4a906517797B103F65848ee6D15AF8678510Ce82 in 0x4ed0bddd1d65a82d9f99688117d161e02a69f8c3ba714a513cb7b0f0752060de
+2022-10-15T02:31:24.963Z|info|deployment params: {"name":"NFToken","symbol":"NFT","baseUri":"ipfs://token_metadata_root_cid","contractUri":"ipfs://contract_metadata_cid","maxSupply":10000,"unitPrice":"1000000000000000","mintAllowance":10,"mintPeriodStart":0,"mintPeriodEnd":0}
+2022-10-15T02:31:24.964Z|info|verifying contract
+2022-10-15T02:34:02.646Z|info|verified contract with etherscan
