@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.8.9;
 
-import '@openzeppelin/contracts/access/AccessControl.sol';
+import '@openzeppelin/contracts/access/AccessControlEnumerable.sol';
 import '@openzeppelin/contracts/interfaces/IERC2981.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
@@ -14,7 +14,7 @@ import '../interfaces/INFTPriceResolver.sol';
 import '../interfaces/IOperatorFilter.sol';
 import './ERC721FU.sol';
 
-abstract contract BaseNFT is ERC721FU, AccessControl, ReentrancyGuard {
+abstract contract BaseNFT is ERC721FU, AccessControlEnumerable, ReentrancyGuard {
   using Strings for uint256;
 
   bytes32 public constant MINTER_ROLE = keccak256('MINTER_ROLE');
@@ -474,12 +474,12 @@ abstract contract BaseNFT is ERC721FU, AccessControl, ReentrancyGuard {
   function supportsInterface(bytes4 interfaceId)
     public
     view
-    override(AccessControl, ERC721FU)
+    override(AccessControlEnumerable, ERC721FU)
     returns (bool)
   {
     return
       interfaceId == type(IERC2981).interfaceId || // 0x2a55205a
-      AccessControl.supportsInterface(interfaceId) ||
+      AccessControlEnumerable.supportsInterface(interfaceId) ||
       ERC721FU.supportsInterface(interfaceId);
   }
 }

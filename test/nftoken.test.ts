@@ -19,6 +19,8 @@ describe('NFToken tests', () => {
 
     let nfTokenFactory: any;
     let basicToken: any;
+    let tokenFactory: any;
+
     const basicBaseUri = 'ipfs://hidden';
     const basicBaseUriRevealed = 'ipfs://revealed/';
     const basicContractUri = 'ipfs://metadata';
@@ -50,20 +52,75 @@ describe('NFToken tests', () => {
         basicMintPeriodStart = Math.floor(now + 60 * 60);
         basicMintPeriodEnd = Math.floor(now + 24 * 60 * 60);
 
-        nfTokenFactory = await ethers.getContractFactory('NFToken');
-        basicToken = await nfTokenFactory
-            .connect(deployer)
-            .deploy(
-                basicName,
-                basicSymbol,
-                basicBaseUri,
-                basicContractUri,
-                basicMaxSupply,
-                basicUnitPrice,
-                basicMintAllowance,
-                basicMintPeriodStart,
-                basicMintPeriodEnd
-            );
+        const nfTokenFactory = await ethers.getContractFactory('NFToken');
+        basicToken = await nfTokenFactory.connect(deployer).deploy();
+
+        const TokenFactoryFactory = await ethers.getContractFactory('TokenFactory');
+        tokenFactory = await TokenFactoryFactory.connect(deployer).deploy(basicToken.address);
+
+        let tx = await tokenFactory.connect(deployer).deployToken(
+            deployer.address,
+            basicName,
+            basicSymbol,
+            basicBaseUri,
+            basicContractUri,
+            basicMaxSupply,
+            basicUnitPrice,
+            basicMintAllowance,
+            basicMintPeriodStart,
+            basicMintPeriodEnd
+        );
+
+        let receipt = await tx.wait();
+        let [contractAddress, ] = receipt.events.filter((e: any) => e.event === 'Deployment')[0].args;
+        basicToken = nfTokenFactory.attach(contractAddress);
+    });
+
+    it('Fail to init manually-deployed token', async () => {
+        const basicName = 'Test NFT'
+        const basicSymbol = 'NFT';
+
+        const nfTokenFactory = await ethers.getContractFactory('NFToken');
+        const token = await nfTokenFactory.connect(deployer).deploy();
+
+        await expect(token.connect(accounts[0]).initialize(
+            accounts[0].address,
+            basicName,
+            basicSymbol,
+            basicBaseUri,
+            basicContractUri,
+            basicMaxSupply,
+            basicUnitPrice,
+            basicMintAllowance,
+            basicMintPeriodStart,
+            basicMintPeriodEnd
+        )).to.be.revertedWithCustomError(token, 'INVALID_OPERATION');
+
+        await expect(token.connect(deployer).initialize(
+            deployer.address,
+            basicName,
+            basicSymbol,
+            basicBaseUri,
+            basicContractUri,
+            basicMaxSupply,
+            basicUnitPrice,
+            basicMintAllowance,
+            basicMintPeriodStart,
+            basicMintPeriodEnd
+        )).not.to.be.reverted;
+
+        await expect(token.connect(deployer).initialize(
+            deployer.address,
+            basicName,
+            basicSymbol,
+            basicBaseUri,
+            basicContractUri,
+            basicMaxSupply,
+            basicUnitPrice,
+            basicMintAllowance,
+            basicMintPeriodStart,
+            basicMintPeriodEnd
+        )).to.be.revertedWithCustomError(token, 'INVALID_OPERATION');
     });
 
     it('Get contract metadata uri', async () => {

@@ -23,6 +23,7 @@ describe('SupplyPriceResolver tests', () => {
 
     let directory: any;
     let basicToken: any;
+    let tokenFactory: any;
     let supplyPriceResolver: any;
 
     before('Initialize accounts', async () => {
@@ -51,19 +52,27 @@ describe('SupplyPriceResolver tests', () => {
         const basicMintPeriodEnd = Math.floor((Date.now() / 1000) + 24 * 60 * 60);
 
         const nfTokenFactory = await ethers.getContractFactory('NFToken');
-        basicToken = await nfTokenFactory
-            .connect(deployer)
-            .deploy(
-                basicName,
-                basicSymbol,
-                basicBaseUri,
-                basicContractUri,
-                basicMaxSupply,
-                basicUnitPrice,
-                basicMintAllowance,
-                basicMintPeriodStart,
-                basicMintPeriodEnd
-            );
+        basicToken = await nfTokenFactory.connect(deployer).deploy();
+
+        const TokenFactoryFactory = await ethers.getContractFactory('TokenFactory');
+        tokenFactory = await TokenFactoryFactory.connect(deployer).deploy(basicToken.address);
+
+        let tx = await tokenFactory.connect(deployer).deployToken(
+            deployer.address,
+            basicName,
+            basicSymbol,
+            basicBaseUri,
+            basicContractUri,
+            basicMaxSupply,
+            basicUnitPrice,
+            basicMintAllowance,
+            basicMintPeriodStart,
+            basicMintPeriodEnd
+        );
+
+        let receipt = await tx.wait();
+        let [contractAddress, ] = receipt.events.filter((e: any) => e.event === 'Deployment')[0].args;
+        basicToken = nfTokenFactory.attach(contractAddress);
     });
 
     it('Assign linear price resolver', async () => {

@@ -1,13 +1,28 @@
 {
-    "name": "NFToken",
-    "symbol": "NFT",
-    "baseUri": "ipfs://token_metadata_root_cid",
-    "contractUri": "ipfs://contract_metadata_cid",
-    "maxSupply": 10000,
-    "unitPrice": "1000000000000000",
-    "mintAllowance": 10,
-    "mintPeriodStart": 0,
-    "mintPeriodEnd": 0
+    "system": {
+        "sourceToken": "0x1B622A6A4BB74D78aEE7E6A0bd39AD1C9A030d7a",
+        "tokenFactory": "0x4652c51440B684Ba270c7E8FcfE1D425467Bc556"
+    },
+    "tokens": [
+        {
+            "address": "0x93630cc11510EF77d70d93728dAA066130162C02",
+            "contractMetadataPath": "./assets/tokenA/metadata.json",
+            "contractMetadataIPFS": "ipfs://QmfGxZqqKLvTMjZVAAryDNrjR42hS5oUKy2eHQMjy8fca9",
+            "tokenMetadataIPFS": "ipfs://QmbR85G1HqkV4rbqEGxv5uo7AvGDKynJeqRLyWWxjP9Jqq",
+            "unitPrice": "100000000000000",
+            "mintAllowance": 10,
+            "mintPeriodStart": 0,
+            "mintPeriodEnd": 0
+        },
+        {
+            "address": "0x7d14C741eA2D9B17CC12CD3Fb6906BA094C48B6E",
+            "contractMetadataPath": "./assets/tokenB/metadata.json",
+            "contractMetadataIPFS": "ipfs://QmTG5s77d1ZF3v2nhkqCuUj4oi6oyM3gjpiGJW6Mig5eWR",
+            "tokenMetadataIPFS": "ipfs://QmazU9X1vHY7uSmC9uD6qGMXbpHz54f9H7ZtsVsB2hewfb",
+            "unitPrice": "100000000000000",
+            "mintAllowance": 10,
+            "mintPeriodStart": 0,
+            "mintPeriodEnd": 0
+        }
+    ]
 }
-
-
